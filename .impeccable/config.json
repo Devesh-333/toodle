@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "app/globals.css"
+        ],
+        "createdAt": "2026-09-27T14:33:49.130Z",
+        "reason": "Agent: the only side accent is a 1px neutral gray border, so the thick colored side-tab pattern is absent."
+      },
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "app/globals.css"
+        ],
+        "createdAt": "2026-09-27T14:33:52.881Z",
+        "reason": "Agent: CSS transitions animate transform, colors, border colors, or rotation; none transition width, height, padding, or margin."
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          "app/globals.css"
+        ],
+        "createdAt": "2026-09-27T15:16:00.345Z",
+        "reason": "User-supplied redesign brief specifies Inter as the interface font."
+      }
+    ]
+  }
+}
