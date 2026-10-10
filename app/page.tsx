@@ -1,8 +1,20 @@
 "use client";
 
-import { useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Zap,
+  Bot,
+  Smartphone,
+  Database,
+  RefreshCw,
+  Users,
+  Package,
+  FlaskConical,
+  Sparkles,
+} from "lucide-react";
 import type { Answer, Category, Question, ValidationReport } from "@/lib/types";
 import { categories } from "@/lib/validation";
 import { useFadeIn } from "@/components/useFadeIn";
@@ -13,6 +25,25 @@ import { PixelSlothInteractive } from "@/components/PixelSlothInteractive";
 
 type Step = "idea" | "questions" | "loading-questions" | "loading-report";
 const marks = ["A", "B", "C", "D"];
+
+const FEATURED_PROMPT = {
+  label: "Cancellation filler for therapists",
+  text: "A micro-SaaS that helps independent mental health therapists automatically fill last-minute appointment cancellations with waitlisted clients.",
+};
+
+function getCategoryIcon(cat: Category) {
+  switch (cat) {
+    case "Micro-SaaS / B2B Web App": return <Zap size={14} strokeWidth={2.2} />;
+    case "AI Tool / Agent / Workflow": return <Bot size={14} strokeWidth={2.2} />;
+    case "Mobile App (iOS / Android)": return <Smartphone size={14} strokeWidth={2.2} />;
+    case "Curated Directory / Database": return <Database size={14} strokeWidth={2.2} />;
+    case "Marketplace / Platform": return <RefreshCw size={14} strokeWidth={2.2} />;
+    case "Paid Community / Membership": return <Users size={14} strokeWidth={2.2} />;
+    case "E-Commerce / Digital Product": return <Package size={14} strokeWidth={2.2} />;
+    case "Something Else / Experimental": return <FlaskConical size={14} strokeWidth={2.2} />;
+    default: return <Sparkles size={14} strokeWidth={2.2} />;
+  }
+}
 
 export default function HomePage() {
   const router = useRouter();
@@ -26,10 +57,52 @@ export default function HomePage() {
   const [error, setError] = useState("");
   const [reportPhase, setReportPhase] = useState("Analyzing your idea and answers…");
   const ideaRef = useRef<HTMLTextAreaElement>(null);
+  const [scrolledPastHero, setScrolledPastHero] = useState(false);
   useFadeIn(`${step}-${index}`);
 
+  useEffect(() => {
+    if (step !== "idea") return;
+    const checkScroll = () => {
+      const heroEl = document.getElementById("hero-scene");
+      if (!heroEl) {
+        setScrolledPastHero(true);
+        return;
+      }
+      const rect = heroEl.getBoundingClientRect();
+      setScrolledPastHero(rect.bottom <= 100);
+    };
+    window.addEventListener("scroll", checkScroll, { passive: true });
+    checkScroll();
+    return () => window.removeEventListener("scroll", checkScroll);
+  }, [step]);
+
+  const isOverHero = step === "idea" && !scrolledPastHero;
+
+  useEffect(() => {
+    if (step !== "questions") return;
+    const curr = questions[index];
+    if (!curr) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (document.activeElement?.tagName === "INPUT" || document.activeElement?.tagName === "TEXTAREA") return;
+      const num = parseInt(e.key, 10);
+      if (!isNaN(num) && num >= 1 && num <= curr.options.length) {
+        e.preventDefault();
+        selectAnswer(curr.options[num - 1]);
+      } else if (e.key.toLowerCase() === "o" || e.key === "5") {
+        e.preventDefault();
+        selectAnswer("Other");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [step, questions, index]);
+
   function scrollToIdeaSection() {
-    document.getElementById("idea-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const el = document.getElementById("idea-section");
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 115;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
   }
 
   function focusIdea() {
@@ -129,7 +202,7 @@ export default function HomePage() {
   const currentAnswer = chosen === "Other" ? (otherAnswers[index] ?? "").trim() : chosen;
 
   return <div className="shell">
-    <header className={`topbar ${step === "idea" ? "topbar-over-hero" : ""}`}><div className="nav-inner"><a className="brand" href="/"><span className="brand-mark"><PixelBulb size={22}/></span><span>IdeaProbe</span></a>{step === "idea" ? <button className="nav-cta" onClick={scrollToIdeaSection}><span>Validate an idea</span><ArrowRight size={16} strokeWidth={1.5}/></button> : <a className="nav-cta" href="/"><span>Validate an idea</span><ArrowRight size={16} strokeWidth={1.5}/></a>}</div></header>
+    <header className={`topbar ${isOverHero ? "topbar-over-hero" : "topbar-scrolled"}`}><div className="nav-inner"><a className="brand" href="/"><span className="brand-mark"><PixelBulb size={22}/></span><span>IdeaProbe</span></a>{step === "idea" ? <button className="nav-cta" onClick={scrollToIdeaSection}><span>Validate an idea</span><ArrowRight size={16} strokeWidth={1.5}/></button> : <a className="nav-cta" href="/"><span>Validate an idea</span><ArrowRight size={16} strokeWidth={1.5}/></a>}</div></header>
     <main className={`main page-enter ${step === "idea" ? "home-main" : ""}`}>
       {step === "idea" && <>
         <section className="hero-scene" id="hero-scene" aria-labelledby="hero-title" onMouseMove={moveHeroPixels} onMouseLeave={resetHeroPixels}>
@@ -157,17 +230,35 @@ export default function HomePage() {
               </div>
               <label className="field-label" id="idea-label" htmlFor="idea-input">What are you thinking of building?<span className="counter">{idea.length}/500</span></label>
               <textarea ref={ideaRef} id="idea-input" className="idea-input" maxLength={500} value={idea} onChange={(event) => setIdea(event.target.value)} placeholder="A tool that helps independent therapists fill last-minute appointment cancellations…" />
-              <p className="field-help">Drop your raw idea. Rough thoughts welcome.</p>
+              <div className="prompt-starters">
+                <span className="starter-label">Try an idea:</span>
+                <button
+                  type="button"
+                  className="starter-chip"
+                  onClick={() => { setIdea(FEATURED_PROMPT.text); ideaRef.current?.focus(); }}
+                >
+                  <span className="starter-chip-icon-box">
+                    <Sparkles size={12} strokeWidth={2.2} />
+                  </span>
+                  <span className="starter-chip-text">{FEATURED_PROMPT.label}</span>
+                  <span className="starter-chip-action">Use prompt ↵</span>
+                </button>
+              </div>
               <label className="field-label" htmlFor="category">Category</label>
-              <div className="category-select-wrap">
-                <select className="category-select" id="category" value={category} onChange={(event) => setCategory(event.target.value as Category)}>
-                  {categories.map((item) => <option key={item} value={item} className="category-option">{item}</option>)}
-                </select>
-                <span className="category-chevron" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 10 10" shapeRendering="crispEdges" fill="currentColor">
-                    <path d="M1 3h8v2H1z M2 5h6v2H2z M4 7h2v2H4z" />
-                  </svg>
-                </span>
+              <div className="category-pills-grid" role="radiogroup" aria-label="Select idea category">
+                {categories.map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    role="radio"
+                    aria-checked={category === item}
+                    className={`cat-pill ${category === item ? "cat-pill-active" : ""}`}
+                    onClick={() => setCategory(item)}
+                  >
+                    <span className="cat-pill-icon-box">{getCategoryIcon(item)}</span>
+                    <span className="cat-pill-text">{item}</span>
+                  </button>
+                ))}
               </div>
               <button className="primary-btn" onClick={begin} disabled={idea.trim().length < 15}><span>Start your validation</span><ArrowRight size={16} strokeWidth={1.5}/></button>
               <p className="privacy">Your idea stays private and is only used to create your assessment.</p>
@@ -179,7 +270,7 @@ export default function HomePage() {
 
       {step === "loading-questions" && <div className="flow-wrap" data-reveal><div className="step-label">Your idea / Getting the context</div><div className="progress" aria-label="Preparing 6 questions">{Array.from({length:6},(_,i)=><span key={i} className={i===0?"filled":""}/>)}</div><div className="loading-panel card" role="status" aria-live="polite"><div className="loader"/><h2 className="question">Finding the right questions</h2><p className="flow-desc">We’re looking for the details that matter for this idea.</p></div></div>}
 
-      {step === "questions" && current && <div className="flow-wrap" data-reveal><div className="step-label">VALIDATION / YOUR IDEA</div><div className="progress" aria-label={`Question ${index + 1} of ${questions.length}`}>{questions.map((_,i)=><span key={i} className={i <= index?"filled":""}/>)}</div><h1 className="flow-title" style={{filter:"url(#headline-inner-shadow-dark)"}}>Let’s get specific.</h1><p className="flow-desc">Your answers help make the assessment useful to you, not just the idea on paper.</p><div className="idea-summary card">{idea}</div><div className="step-label question-progress-label">QUESTION {index + 1} OF {questions.length}</div><h2 className="question" style={{filter:"url(#headline-inner-shadow-dark)"}}>{current.question}</h2><div className="options" role="radiogroup" aria-label={current.question}>{current.options.map((option, i) => <button key={`q-${index}-opt-${i}-${option}`} role="radio" aria-checked={chosen === option} className={`option ${chosen === option ? "selected" : ""}`} onClick={() => selectAnswer(option)}><span className="option-key">{marks[i]}</span><span>{option}</span></button>)}<button role="radio" aria-checked={chosen === "Other"} className={`option ${chosen === "Other" ? "selected" : ""}`} onClick={() => selectAnswer("Other")}><span className="option-key">+</span><span>Something else</span></button></div>{chosen === "Other" && <input autoFocus className="other-input" value={otherAnswers[index] ?? ""} onChange={(event) => setOtherAnswers((currentAnswers) => currentAnswers.map((answer, i) => i === index ? event.target.value.slice(0, 300) : answer))} placeholder="Tell us a little more…" aria-label="Your answer" onKeyDown={(event) => { if (event.key === "Enter" && currentAnswer && index < questions.length - 1) setIndex(index + 1); }}/>}<div className="flow-actions"><button className="text-btn" onClick={() => { setError(""); index === 0 ? setStep("idea") : setIndex(index - 1); }}><ArrowLeft size={14} strokeWidth={1.5}/> Back</button><button className="primary-btn" disabled={!currentAnswer} onClick={() => { setError(""); if (index < questions.length - 1) setIndex(index + 1); else void generateReport(); }}><span>{index < questions.length - 1 ? "Continue" : "Create my assessment"}</span><ArrowRight size={16} strokeWidth={1.5}/></button></div>{error && <div className="error-box" role="alert">{error}<button className="text-btn" onClick={() => void generateReport()}>Try again <ArrowRight size={14} strokeWidth={1.5}/></button></div>}</div>}
+      {step === "questions" && current && <div className="flow-wrap" data-reveal><div className="step-label">VALIDATION / YOUR IDEA</div><div className="progress-track-wrap"><div className="progress-frog-mascot" style={{ left: `${(index / Math.max(1, questions.length - 1)) * 92 + 4}%` }}><img src="/pixel-frog-f0.png" width="22" height="20" alt="Frog mascot" /></div><div className="progress" aria-label={`Question ${index + 1} of ${questions.length}`}>{questions.map((_,i)=><span key={i} className={i <= index?"filled":""}/>)}</div></div><h1 className="flow-title" style={{filter:"url(#headline-inner-shadow-dark)"}}>Let’s get specific.</h1><p className="flow-desc">Your answers help make the assessment useful to you, not just the idea on paper.</p><div className="idea-summary card">{idea}</div><div className="step-label question-progress-label">QUESTION {index + 1} OF {questions.length} <span style={{opacity:0.65,fontWeight:400,marginLeft:8}}>• Press 1–4 to answer</span></div><h2 className="question" style={{filter:"url(#headline-inner-shadow-dark)"}}>{current.question}</h2><div className="options" role="radiogroup" aria-label={current.question}>{current.options.map((option, i) => <button key={`q-${index}-opt-${i}-${option}`} role="radio" aria-checked={chosen === option} className={`option ${chosen === option ? "selected" : ""}`} onClick={() => selectAnswer(option)}><span className="option-key-badge">{i + 1}</span><span>{option}</span></button>)}<button role="radio" aria-checked={chosen === "Other"} className={`option ${chosen === "Other" ? "selected" : ""}`} onClick={() => selectAnswer("Other")}><span className="option-key-badge">O</span><span>Something else</span></button></div>{chosen === "Other" && <input autoFocus className="other-input" value={otherAnswers[index] ?? ""} onChange={(event) => setOtherAnswers((currentAnswers) => currentAnswers.map((answer, i) => i === index ? event.target.value.slice(0, 300) : answer))} placeholder="Tell us a little more…" aria-label="Your answer" onKeyDown={(event) => { if (event.key === "Enter" && currentAnswer && index < questions.length - 1) setIndex(index + 1); }}/>}<div className="flow-actions"><button className="text-btn" onClick={() => { setError(""); index === 0 ? setStep("idea") : setIndex(index - 1); }}><ArrowLeft size={14} strokeWidth={1.5}/> Back</button><button className="primary-btn" disabled={!currentAnswer} onClick={() => { setError(""); if (index < questions.length - 1) setIndex(index + 1); else void generateReport(); }}><span>{index < questions.length - 1 ? "Continue" : "Create my assessment"}</span><ArrowRight size={16} strokeWidth={1.5}/></button></div>{error && <div className="error-box" role="alert">{error}<button className="text-btn" onClick={() => void generateReport()}>Try again <ArrowRight size={14} strokeWidth={1.5}/></button></div>}</div>}
 
       {step === "loading-report" && <div className="flow-wrap" data-reveal><div className="step-label">Your idea / Your assessment</div><div className="progress" aria-label="Analysis complete">{Array.from({length:6},(_,i)=><span key={i} className="filled"/>)}</div><div className="loading-panel card" role="status" aria-live="polite"><div className="loader"/><h2 className="question">{reportPhase}</h2><p className="flow-desc">We’re weighing customer need, market demand, competition, monetization, and feasibility against your answers.</p><p className="source-note">This can take up to a minute. Keep this page open.</p></div></div>}
     </main>

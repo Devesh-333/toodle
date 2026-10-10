@@ -7,7 +7,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "IdeaProbe — Test your idea before you build",
   description: "A clearer-eyed way to validate a startup idea. Answer a few focused questions, then get an honest, actionable assessment.",
+  icons: { icon: "/icon.svg", shortcut: "/icon.svg", apple: "/icon.svg" },
   openGraph: { title: "IdeaProbe", description: "Test your idea before you build.", type: "website" },
+  twitter: { card: "summary", title: "IdeaProbe", description: "Test your idea before you build." },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
