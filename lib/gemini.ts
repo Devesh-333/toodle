@@ -45,6 +45,6 @@ export function cleanIdea(value: unknown): string {
   if (typeof value !== "string") throw new Error("Add a short description of your idea to continue.");
   const idea = value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").trim();
   if (idea.length < 15) throw new Error("Add a little more detail (at least 15 characters).");
-  if (idea.length > 500) throw new Error("Your idea must be 500 characters or fewer.");
+  if (idea.length > 25000) throw new Error("Your idea must be 25,000 characters or fewer.");
   return idea;
 }

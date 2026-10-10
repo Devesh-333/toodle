@@ -439,8 +439,8 @@ body { min-height: 100vh; display:flex; flex-direction:column; background:var(--
 .hero-scene .home-grid { min-height:760px; padding-top:156px; }
 .form-topline { margin-bottom:20px; color:var(--ink-muted); font:400 11px/1.4 'IBM Plex Mono',monospace; letter-spacing:0; }
 .form-mark,.pixel-icon-badge { border:1px solid var(--border-card); border-radius:6px; background:var(--surface); color:var(--ink-faint); }
-.field-label { color:var(--ink-ui); font:460 13px/1.4 'Inter Variable',Inter,sans-serif; letter-spacing:.13px; }
-.counter { color:var(--ink-faint); font:400 11px/1.4 'IBM Plex Mono',monospace; }
+.field-label { color:var(--ink-ui); font:460 13px/1.4 'Inter Variable',Inter,sans-serif; letter-spacing:.13px; display:flex; justify-content:space-between; align-items:baseline; }
+.counter { color:var(--ink-faint); font:400 11px/1.4 'IBM Plex Mono',monospace; white-space:nowrap; flex-shrink:0; margin-left:8px; }
 .idea-input { min-height:132px; padding:16px; border:1px solid var(--border-card); border-radius:8px; background:#fff; color:var(--ink); font:460 15px/1.4 'Inter Variable',Inter,sans-serif; letter-spacing:.15px; }
 .idea-input:focus,.category-select:focus { border-color:var(--border-hover); box-shadow:0 0 0 3px rgba(32,32,32,.06); }
 .field-help,.privacy { color:var(--ink-muted); font:460 12px/1.5 'Inter Variable',Inter,sans-serif; letter-spacing:.1px; }
@@ -1425,16 +1425,17 @@ header.topbar-over-hero .nav-cta:hover {
 /* 2. Tactile Category Bento / Pills Grid (Professional Vector Icons in Bespoke Enclosures) */
 .category-pills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 10px;
   margin-top: 8px;
   margin-bottom: 22px;
 }
 .cat-pill {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
+  gap: 9px;
+  min-height: 44px;
+  padding: 8px 11px;
   border-radius: 8px;
   border: 1.5px solid rgba(40, 40, 35, 0.12);
   background: #ffffff;
@@ -1488,10 +1489,10 @@ header.topbar-over-hero .nav-cta:hover {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25) !important;
 }
 .cat-pill-text {
-  line-height: 1.25;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.3;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 /* 3. Hopping Frog Progress Mascot */

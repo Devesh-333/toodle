@@ -228,8 +228,21 @@ export default function HomePage() {
                 <span className="form-mark" aria-hidden="true"><PixelStar size={14} className="pixel-star-icon" /></span>
                 <span>Start with what you know</span>
               </div>
-              <label className="field-label" id="idea-label" htmlFor="idea-input">What are you thinking of building?<span className="counter">{idea.length}/500</span></label>
-              <textarea ref={ideaRef} id="idea-input" className="idea-input" maxLength={500} value={idea} onChange={(event) => setIdea(event.target.value)} placeholder="A tool that helps independent therapists fill last-minute appointment cancellations…" />
+              <label className="field-label" id="idea-label" htmlFor="idea-input">
+                What are you thinking of building?
+                <span className="counter">
+                  {idea.trim() ? `${idea.trim().split(/\s+/).filter(Boolean).length} words` : "0 words"} • {idea.length} chars
+                </span>
+              </label>
+              <textarea
+                ref={ideaRef}
+                id="idea-input"
+                className="idea-input"
+                maxLength={25000}
+                value={idea}
+                onChange={(event) => setIdea(event.target.value)}
+                placeholder="A tool that helps independent therapists fill last-minute appointment cancellations…"
+              />
               <div className="prompt-starters">
                 <span className="starter-label">Try an idea:</span>
                 <button
