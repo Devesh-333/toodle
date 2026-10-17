@@ -12,12 +12,12 @@ interface TaskItem {
 }
 
 const TASK_POOL: TaskItem[] = [
-  { id: "t1", status: "done",    label: "Task Completed", task: "Pain verified"       },
-  { id: "t2", status: "running", label: "Task running",   task: "Demand check"        },
-  { id: "t3", status: "done",    label: "Task Completed", task: "Competitors scanned" },
-  { id: "t4", status: "done",    label: "Task Completed", task: "Reddit signals"      },
-  { id: "t5", status: "running", label: "Task running",   task: "Pricing test"        },
-  { id: "t6", status: "done",    label: "Task Completed", task: "Zombies killed"      },
+  { id: "t1", status: "done",    label: "[SYS:OK]",  task: "Pain point verified"    },
+  { id: "t2", status: "running", label: "[SYS:RUN]", task: "Market demand check"    },
+  { id: "t3", status: "done",    label: "[SYS:OK]",  task: "Competitors scanned"    },
+  { id: "t4", status: "done",    label: "[SYS:OK]",  task: "Reddit signals parsed"  },
+  { id: "t5", status: "running", label: "[SYS:RUN]", task: "Willingness-to-pay"     },
+  { id: "t6", status: "done",    label: "[SYS:OK]",  task: "Zombie ideas filtered"  },
 ];
 
 export function HeroTaskStream() {

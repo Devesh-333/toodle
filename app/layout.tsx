@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "@fontsource-variable/inter";
 import "@fontsource/dm-mono/latin-400.css";
 import "@fontsource/ibm-plex-mono/latin-400.css";
+import "@fontsource/silkscreen/latin-400.css";
+import "@fontsource/silkscreen/latin-700.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,6 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <filter id="headline-inner-shadow-light"><feGaussianBlur in="SourceAlpha" stdDeviation="1.2"/><feOffset dx="0" dy="2"/><feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowDiff"/><feColorMatrix in="shadowDiff" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .75 0" result="shadow"/><feComposite in="shadow" in2="SourceGraphic" operator="over"/></filter>
       </defs>
     </svg>
+    <div className="grain-overlay" aria-hidden="true" />
     {children}
   </body></html>;
 }
