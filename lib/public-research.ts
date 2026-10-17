@@ -1,6 +1,6 @@
 import type { PublicEvidenceItem } from "./types";
 
-const USER_AGENT = "IdeaProbe/1.0 (public idea validation)";
+const USER_AGENT = "Doodle/1.0 (public idea validation)";
 const MAX_SNIPPET = 360;
 const STOP_WORDS = new Set("about after again against all also and any app are because been before being between build can could daily does each from have help into idea ideas just make more most need needs people real same that them then there these they this through using want was were what when where which while with would your their for the its our you how why who use has not but user users helps service using using".split(" "));
 

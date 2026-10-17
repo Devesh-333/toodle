@@ -1,6 +1,6 @@
-# IdeaProbe
+# Doodle
 
-IdeaProbe is a small, anonymous idea validation flow: describe an idea, answer six tailored questions, and get a candid report with practical next steps.
+Doodle is a small, anonymous idea validation flow: describe an idea, answer six tailored questions, and get a candid report with practical next steps.
 
 ## Run locally
 

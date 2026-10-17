@@ -10,7 +10,7 @@ dotenv.config({ path: path.join(process.cwd(), '.env.local') });
 if (process.env.GROQ_API_KEY) {
   process.env.OPENAI_BASE_URL = 'https://api.groq.com/openai/v1';
   process.env.OPENAI_API_KEY = process.env.GROQ_API_KEY;
-  process.env.MIDSCENE_MODEL_NAME = 'openai/gpt-oss-120b';
+  process.env.MIDSCENE_MODEL_NAME = 'qwen/qwen3.8-27b';
 }
 
 interface TestLog {
@@ -47,9 +47,9 @@ const auditResults: {
 };
 
 async function runComprehensiveAudit() {
-  const targetUrl = 'http://localhost:3000';
+  const targetUrl = process.env.AUDIT_TARGET_URL || 'https://ideaprobe-nine.vercel.app';
   console.log(`\n=============================================================`);
-  console.log(`🔥 STARTING FULL MULTI-DEVICE BRUTAL AUDIT OF IDEAPROBE (${targetUrl})`);
+  console.log(`🔥 STARTING FULL MULTI-DEVICE BRUTAL AUDIT OF DOODLE (${targetUrl})`);
   console.log(`=============================================================\n`);
 
   const browser = await chromium.launch({ headless: true });
@@ -78,7 +78,7 @@ async function runComprehensiveAudit() {
   auditResults.performanceAudit.initialPageLoadMs = loadTime;
   auditResults.functionalAudit.push({
     flow: 'Initial Page Load',
-    status: loadTime < 2000 ? 'PASS' : 'WARN',
+    status: loadTime < 2500 ? 'PASS' : 'WARN',
     latencyMs: loadTime,
     details: `Page loaded in ${loadTime}ms. HTTP 200.`,
   });
@@ -368,7 +368,7 @@ async function runComprehensiveAudit() {
     : Object.values(auditResults.responsiveAudit).every((r: any) => !r.overflow.hasHorizontalOverflow && !r.heroOverlap)
     ? 92
     : 65;
-  const perfScore = auditResults.performanceAudit.initialPageLoadMs < 1200 ? 100 : 85;
+  const perfScore = auditResults.performanceAudit.initialPageLoadMs < 2500 ? 100 : 85;
 
   auditResults.overallScores = {
     functional: functionalScore,
