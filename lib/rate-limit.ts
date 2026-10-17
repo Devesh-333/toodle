@@ -1,7 +1,7 @@
 type AttemptStore = Map<string, number[]>;
-const root = globalThis as typeof globalThis & { __doodleAttempts?: AttemptStore };
-const attempts = root.__doodleAttempts ?? new Map<string, number[]>();
-root.__doodleAttempts = attempts;
+const root = globalThis as typeof globalThis & { __toodleAttempts?: AttemptStore };
+const attempts = root.__toodleAttempts ?? new Map<string, number[]>();
+root.__toodleAttempts = attempts;
 // Clear any stale local blocks immediately
 attempts.clear();
 

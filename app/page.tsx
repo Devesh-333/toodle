@@ -193,6 +193,7 @@ export default function HomePage() {
       if (!report) throw new Error("The report stream ended before the report was ready. Please try again.");
       const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(report)))));
       try { 
+        localStorage.setItem(`toodle:${report.id}`, JSON.stringify(report));
         localStorage.setItem(`doodle:${report.id}`, JSON.stringify(report));
         localStorage.setItem(`ideaprobe:${report.id}`, JSON.stringify(report)); 
       } catch { /* private browsing storage can be unavailable */ }
@@ -205,7 +206,7 @@ export default function HomePage() {
   const currentAnswer = chosen === "Other" ? (otherAnswers[index] ?? "").trim() : chosen;
 
   return <div className="shell">
-    <header className={`topbar ${isOverHero ? "topbar-over-hero" : "topbar-scrolled"}`}><div className="nav-inner"><a className="brand" href="/"><span className="brand-mark"><PixelBulb size={22}/></span><span>Doodle</span></a>{step === "idea" ? <button className="nav-cta" onClick={scrollToIdeaSection}><span>Validate an idea</span><ArrowRight size={16} strokeWidth={1.5}/></button> : <a className="nav-cta" href="/"><span>Validate an idea</span><ArrowRight size={16} strokeWidth={1.5}/></a>}</div></header>
+    <header className={`topbar ${isOverHero ? "topbar-over-hero" : "topbar-scrolled"}`}><div className="nav-inner"><a className="brand" href="/"><span className="brand-mark"><PixelBulb size={22}/></span><span>Toodle</span></a>{step === "idea" ? <button className="nav-cta" onClick={scrollToIdeaSection}><span>Validate an idea</span><ArrowRight size={16} strokeWidth={1.5}/></button> : <a className="nav-cta" href="/"><span>Validate an idea</span><ArrowRight size={16} strokeWidth={1.5}/></a>}</div></header>
     <main className={`main page-enter ${step === "idea" ? "home-main" : ""}`}>
       {step === "idea" && <>
         <section className="hero-scene" id="hero-scene" aria-labelledby="hero-title" onMouseMove={moveHeroPixels} onMouseLeave={resetHeroPixels}>
@@ -223,7 +224,7 @@ export default function HomePage() {
             <div className="preview-copy">
               <div className="preview-badge"><span className="preview-badge-dot" />STAGE 01 // CONCEPT PROBE</div>
               <h2 id="preview-title"><span id="report-preview">Validate before you write a single line of code.</span></h2>
-              <p>Doodle stress-tests your concept against real market demand, competitor saturation, and willingness-to-pay signals.</p>
+              <p>Toodle stress-tests your concept against real market demand, competitor saturation, and willingness-to-pay signals.</p>
               <button className="text-link" onClick={focusIdea}>Start with your idea <ArrowRight size={15} strokeWidth={1.5}/></button>
             </div>
             <section className="form-card hero-form card" aria-labelledby="idea-label" id="idea" data-reveal>

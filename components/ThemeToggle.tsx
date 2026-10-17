@@ -9,7 +9,7 @@ export function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true);
-    const stored = (localStorage.getItem("doodle-theme") || localStorage.getItem("ideaprobe-theme")) as "light" | "dark" | null;
+    const stored = (localStorage.getItem("toodle-theme") || localStorage.getItem("doodle-theme") || localStorage.getItem("ideaprobe-theme")) as "light" | "dark" | null;
     if (stored) {
       setTheme(stored);
       document.documentElement.setAttribute("data-theme", stored);
@@ -24,7 +24,7 @@ export function ThemeToggle() {
     setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
     try {
-      localStorage.setItem("doodle-theme", next);
+      localStorage.setItem("toodle-theme", next);
     } catch {
       /* localStorage might be unavailable */
     }

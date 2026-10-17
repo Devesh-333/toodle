@@ -49,7 +49,7 @@ const auditResults: {
 async function runComprehensiveAudit() {
   const targetUrl = process.env.AUDIT_TARGET_URL || 'https://ideaprobe-nine.vercel.app';
   console.log(`\n=============================================================`);
-  console.log(`🔥 STARTING FULL MULTI-DEVICE BRUTAL AUDIT OF DOODLE (${targetUrl})`);
+  console.log(`🔥 STARTING FULL MULTI-DEVICE BRUTAL AUDIT OF TOODLE (${targetUrl})`);
   console.log(`=============================================================\n`);
 
   const browser = await chromium.launch({ headless: true });

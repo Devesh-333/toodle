@@ -7,11 +7,11 @@ import "@fontsource/silkscreen/latin-700.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Doodle — Test your idea before you build",
+  title: "Toodle — Test your idea before you build",
   description: "A clearer-eyed way to validate a startup idea. Answer a few focused questions, then get an honest, actionable assessment.",
   icons: { icon: "/icon.svg", shortcut: "/icon.svg", apple: "/icon.svg" },
-  openGraph: { title: "Doodle", description: "Test your idea before you build.", type: "website" },
-  twitter: { card: "summary", title: "Doodle", description: "Test your idea before you build." },
+  openGraph: { title: "Toodle", description: "Test your idea before you build.", type: "website" },
+  twitter: { card: "summary", title: "Toodle", description: "Test your idea before you build." },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
